@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <script src="js/mui.min.js"></script>
+    <!-- 存储服务 -->
+<script src="https://cdn1.lncld.net/static/js/av-min-1.5.0.js"></script>
+
+    <link href="css/mui.min.css" rel="stylesheet"/>
+   
+</head>
+<body>
+<header class="mui-bar mui-bar-nav">
+  <!--<button class="mui-btn mui-pull-left mui-btn-negative">
+    Left
+  </button>
+  <button class="mui-btn mui-pull-right">
+    Right
+  </button>-->
+  <h1 class="mui-title">易伙加粉工具</h1>
+</header>
+<br /><br /><br />
+<!--最终： 先删除所有》导入50个》打开微信-->
+当前符合<span id="total"></span>个
+<div  class="mui-content-padded">
+<button onclick="add50(10)" class="mui-btn mui-btn-block mui-btn-positive">
+  <span class="mui-icon mui-icon-plus"></span>
+ 换一批粉丝
+</button>
+<button onclick="delall()" class="mui-btn mui-btn-block mui-btn-negative">
+  <span class="mui-icon mui-icon-search"></span>
+  删除所有联系人
+</button>
+<button onclick="reset0()"  class="mui-btn mui-btn-block mui-btn-blue">
+  <span class="mui-icon mui-icon-search"></span>
+ 重新开始 reset0 
+</button>
+<hr />
+<center>以下为测试功能</center>
+
+<button class="mui-btn mui-btn-block mui-btn-positive">
+  <span class="mui-icon mui-icon-search"></span>
+  打开微信
+</button>
+
+<button onclick="changedata()"  class="mui-btn mui-btn-block mui-btn-positive">
+  <span class="mui-icon mui-icon-search"></span>
+ 本地保存 changedata
+</button>
+
+<button onclick="addlocal()"  class="mui-btn mui-btn-block mui-btn-positive">
+  <span class="mui-icon mui-icon-search"></span>
+添加本地数据  addlocal
+</button>
+
+
+
+
+
+</div>
+</body> 
+</html>
+ <script type="text/javascript" charset="utf-8">
+    
+    var APP_ID = 'csXFgnEzBkodigdDUARBrEse-gzGzoHsz';
+var APP_KEY = 'K2CE4ChmGnUwI8mMBgTRHw7y';
+AV.init({
+  appId: APP_ID,
+  appKey: APP_KEY
+});
+     var storage = window.localStorage; 
+//   storage.setItem('ssskip',2);
+//   console.log(storage.getItem('ssskip'));
+ 
+  var query = new AV.Query('contact');
+  //统计数量
+  query.equalTo('type', '1');
+  query.count().then(function (count) {
+      console.log(count);
+      document.getElementById("total").innerHTML=count;
+  }, function (error) {
+  });
+  
+
+function changedata(){
+	var limit = 2000; //每次添加
+  query.equalTo('type', '1');//查询条件 type:1 老板 
+  query.limit(limit);// 最多返回 10 条结果
+  query.find().then(function (results) {
+  	storage.setItem('results',JSON.stringify(results)); //存入新的数据
+  	console.log(JSON.stringify(results.length));
+   mui.toast( results.length+"个联系人成功保存本地" );
+	  }, function (error) {
+  	console.log('失败！');
+  });
+}
+
+function addlocal(){
+	var addnum = 1;//添加数量
+  	var skip =storage.getItem('ssskip');//获得当前已加下标
+  	var max = parseInt(parseInt(addnum)+parseInt(skip));
+  	console.log("skip:"+skip+"  max:"+max); 
+	addlimit(skip,max);//添加到通迅录
+	storage.setItem('ssskip',max);
+//	for(var k in results) {// 循环JASON
+////		add(results[k].tel); // 添加到通迅录 
+//		console.log(ssskip);
+//		console.log(results[k].tel);
+//	}
+}
+
+function addlimit(from,to){
+	var results =storage.getItem('results');
+	console.log(results);
+	var results = eval('(' + results + ')');
+	console.log(results.length);
+		for(var i=from;i<to;i++){
+		add(results[i].tel);
+		console.log(i);
+	}
+}
+
+function reset0(){
+	storage.setItem('ssskip',0);
+    mui.toast( "ssskip设置为0" );
+}
+
+  function add50(){
+	delall();//先删除原有粉丝
+  	var limit = 50; //每次添加
+  	var skip =storage.getItem('ssskip');
+  	console.log("skip now:"+skip);
+  query.equalTo('type', '1');//查询条件 type:1 老板 
+  query.limit(limit);// 最多返回 10 条结果
+  query.skip(skip);// 跳过 10 条结果
+  //循环
+  query.find().then(function (results) {
+      var leng = results.length; 
+      console.log(leng);
+      for (var i = 0; i < results.length; i++) {
+				add(results[i].get('tel')); // 添加到通迅录		
+				console.log(results[i].get('tel')); 
+		}
+   skip = parseInt(parseInt(skip)+parseInt(limit));
+   storage.setItem('ssskip',skip); //存入新的数据 skip
+   mui.toast( limit+"个粉丝导入成功，已加粉丝"+skip );
+  }, function (error) {
+  	console.log('失败！');
+  });
+  }
+  //end add50
+      	mui.init();
+      	mui.plusReady(function() {	
+      	
+     	})
+    
+    //添加联系人
+    function add(tel){
+    	plus.contacts.getAddressBook( plus.contacts.ADDRESSBOOK_PHONE, function( addressbook ) {
+    // 可通过addressbook进行通讯录操作
+    var contact = addressbook.create();
+        var name = '易伙三商';
+        var  givenName = name.toString();
+        contact.name = {givenName:givenName};
+        contact.phoneNumbers = [{type:"手机",value:tel,preferred:true}];
+        contact.save( function () {
+            console.log( tel+"导入成功" );
+        }, function ( e ) {
+            mui.toast( "保存联系人失败：" + e.message );
+        } );
+    }, function ( e ) {
+        mui.toast( "无法访问联系人: " + e.message );
+} );
+    }
+    //删除联系人
+function delall(){
+plus.contacts.getAddressBook(plus.contacts.ADDRESSBOOK_PHONE, function (addressbook) {
+addressbook.find(["phoneNumbers"],function(contacts){
+m=contacts.length;
+//contacts.length 联系人的数量前面还有其他代买联系人总数获取没问题。
+for (var i=0;i<m;i++)
+{
+var dc = contacts[i]; 
+if(contacts[i].displayName =='易伙三商'){
+dc.remove();
+}
+
+}
+mui.toast("删除原有粉丝成功！");
+
+}, function () {
+alert("error");
+},{multiple:true});
+},function(e){
+alert("Get address book failed: " + e.message);
+});
+}
+</script>
