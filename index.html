@@ -25,7 +25,7 @@
 <!--最终： 先删除所有》导入50个》打开微信-->
 <center>
 	<h5>当前符合<span id="total"></span>个 / 	已加
-			<span id="adds">200</span>个</h5>
+			<span id="adds">0</span>个</h5>
 	</center>
 	
 	<h5 class="mui-content-padded">数据源</h5>
@@ -36,16 +36,16 @@
 		<ul class="mui-table-view">
 	
 	<li class="mui-table-view-cell mui-radio mui-right">
-		<input name="type" type="radio">老板
+		<input name="type" type="radio" checked >老板
 	</li>
 	<li class="mui-table-view-cell mui-radio mui-right">
-		<input name="type" type="radio">微商
+		<input name="type" type="radio" >微商
 	</li>
 	<li class="mui-table-view-cell mui-radio mui-right">
-		<input name="type" type="radio">学生
+		<input name="type" type="radio" disabled>学生
 	</li>
 	<li class="mui-table-view-cell mui-radio mui-right">
-		<input name="type" type="radio">普通网民
+		<input name="type" type="radio" disabled>普通网民
 	</li>
 	<li class="mui-table-view-cell mui-radio mui-right">
 		<input name="type" type="radio">所有
@@ -111,15 +111,16 @@
 		  appId: APP_ID,
 		  appKey: APP_KEY
 		});
-		//leancloud api
-     var storage = window.localStorage; 
-//   storage.setItem('ssskip',2);
+		//leancloud api end 
+		
+var storage = window.localStorage; 
 var sskip = storage.getItem('ssskip');
 document.getElementById("adds").innerHTML=sskip;
  
   var query = new AV.Query('contact');
+    query.equalTo('type', '1');//查询条件 type:1 老板 
+//query.doesNotExist('type');//查询条件 微商
   //统计数量
-  query.equalTo('type', '1');
   query.count().then(function (count) {
       console.log(count);
       document.getElementById("total").innerHTML=count;
@@ -128,7 +129,7 @@ document.getElementById("adds").innerHTML=sskip;
   
 
 function changedata(){
-	var limit = 2000; //每次添加
+	var limit = 100; //每次添加 只能查到100个
   query.equalTo('type', '1');//查询条件 type:1 老板 
   query.limit(limit);// 最多返回 10 条结果
   query.find().then(function (results) {
@@ -175,7 +176,8 @@ function reset0(){
   	var limit = 50; //每次添加
   	var skip =storage.getItem('ssskip');
   	console.log("skip now:"+skip);
-  query.equalTo('type', '1');//查询条件 type:1 老板 
+  	
+
   query.limit(limit);// 最多返回 10 条结果
   query.skip(skip);// 跳过 10 条结果
   //循环
@@ -184,7 +186,8 @@ function reset0(){
       console.log(leng);
       for (var i = 0; i < results.length; i++) {
 				add(results[i].get('tel')); // 添加到通迅录		
-				console.log(results[i].get('tel')); 
+//				console.log(results[i].get('tel')); 
+// 				mui.toast( i+"/50 正在导入数据" );//慢
 		}
    skip = parseInt(parseInt(skip)+parseInt(limit));
    storage.setItem('ssskip',skip); //存入新的数据 skip
@@ -202,8 +205,10 @@ function reset0(){
     	plus.contacts.getAddressBook( plus.contacts.ADDRESSBOOK_PHONE, function( addressbook ) {
     // 可通过addressbook进行通讯录操作
     var contact = addressbook.create();
-        var name = '易伙三商';
+        var name = '#易伙三商';
+        var nickname = '#易伙三商';
         var  givenName = name.toString();
+        contact.nickname = nickname.toString();
         contact.name = {givenName:givenName};
         contact.phoneNumbers = [{type:"手机",value:tel,preferred:true}];
         contact.save( function () {
@@ -218,7 +223,6 @@ function reset0(){
     //删除联系人
 function delall(){
 	 	mui.plusReady(function() {	
-      	
 plus.contacts.getAddressBook(plus.contacts.ADDRESSBOOK_PHONE, function (addressbook) {
 addressbook.find(["phoneNumbers"],function(contacts){
 m=contacts.length;
@@ -226,7 +230,9 @@ mui.toast("删除原有粉丝成功！");
 for (var i=0;i<m;i++)
 {
 var dc = contacts[i]; 
-if(contacts[i].displayName =='易伙三商' || contacts[i].givenName =='易伙三商'){
+console.log(JSON.stringify(dc));
+if(contacts[i].displayName =='#易伙三商'||  contacts[i].nickName =='#易伙三商'){
+	// || contacts[i].ContactName.givenName =='#易伙三商'  contacts[i].name.givenName =='#易伙三商' ||
 dc.remove();
 }
 
