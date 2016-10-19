@@ -12,14 +12,14 @@
    
 </head>
 <body>
-<header class="mui-bar mui-bar-nav">
-  <!--<button class="mui-btn mui-pull-left mui-btn-negative">
-    Left
-  </button>
-  <button class="mui-btn mui-pull-right">
-    Right
-  </button>-->
-  <h1 class="mui-title">易伙加粉工具</h1>
+<header class="mui-bar mui-bar-nav" style="background: #007AFF;">
+  <a class="mui-btn mui-pull-left mui-btn-negative"  onclick="delall()">
+    清空
+  </a>
+  <a class="mui-btn mui-pull-right" onclick="reset0()">
+    重来
+  </a>
+  <h1 class="mui-title" style="color:#FFFFFF!important">易伙加粉工具</h1>
 </header>
 <br /><br /><br />
 <!--最终： 先删除所有》导入50个》打开微信-->
@@ -35,20 +35,20 @@
 		
 		<ul class="mui-table-view">
 	
-	<li class="mui-table-view-cell mui-radio mui-left">
-		<input name="radio" type="radio">老板
+	<li class="mui-table-view-cell mui-radio mui-right">
+		<input name="type" type="radio">老板
 	</li>
-	<li class="mui-table-view-cell mui-radio mui-left">
-		<input name="radio" type="radio">微商
+	<li class="mui-table-view-cell mui-radio mui-right">
+		<input name="type" type="radio">微商
 	</li>
-	<li class="mui-table-view-cell mui-checkbox mui-left">
-		<input name="checkbox" type="checkbox">学生
+	<li class="mui-table-view-cell mui-radio mui-right">
+		<input name="type" type="radio">学生
 	</li>
-	<li class="mui-table-view-cell mui-checkbox mui-left">
-		<input name="checkbox" type="checkbox">普通网民
+	<li class="mui-table-view-cell mui-radio mui-right">
+		<input name="type" type="radio">普通网民
 	</li>
-	<li class="mui-table-view-cell mui-checkbox mui-left">
-		<input name="checkbox" type="checkbox">所有
+	<li class="mui-table-view-cell mui-radio mui-right">
+		<input name="type" type="radio">所有
 	</li>
 </ul>
 
@@ -62,35 +62,35 @@
 </div>
 
 <div  class="mui-content-padded">
-<button onclick="add50(10)" class="mui-btn mui-btn-block mui-btn-positive">
+<a onclick="add50(10)" class="mui-btn mui-btn-block mui-btn-positive">
   <span class="mui-icon mui-icon-plus"></span>
  换一批粉丝
-</button>
-<button onclick="delall()" class="mui-btn mui-btn-block mui-btn-negative">
+</a>
+<!--<a onclick="delall()" class="mui-btn mui-btn-block mui-btn-negative">
   <span class="mui-icon mui-icon-search"></span>
   删除所有联系人
-</button>
-<button onclick="reset0()"  class="mui-btn mui-btn-block mui-btn-blue">
+</a>
+<a onclick="reset0()"  class="mui-btn mui-btn-block mui-btn-blue">
   <span class="mui-icon mui-icon-search"></span>
  重新开始 reset0 
-</button>
+</a>-->
 <hr />
 <center>以下为测试功能</center>
 
-<button class="mui-btn mui-btn-block mui-btn-positive">
+<a class="mui-btn mui-btn-block mui-btn-primary">
   <span class="mui-icon mui-icon-search"></span>
   打开微信
-</button>
+</a>
 
-<button onclick="changedata()"  class="mui-btn mui-btn-block mui-btn-positive">
+<a onclick="changedata()"  class="mui-btn mui-btn-block mui-btn-primary">
   <span class="mui-icon mui-icon-search"></span>
  本地保存 changedata
-</button>
+</a>
 
-<button onclick="addlocal()"  class="mui-btn mui-btn-block mui-btn-positive">
+<a onclick="addlocal()"  class="mui-btn mui-btn-block mui-btn-primary">
   <span class="mui-icon mui-icon-search"></span>
 添加本地数据  addlocal
-</button>
+</a>
 
 
 
@@ -100,16 +100,22 @@
 </body> 
 </html>
  <script type="text/javascript" charset="utf-8">
-    
-    var APP_ID = 'csXFgnEzBkodigdDUARBrEse-gzGzoHsz';
-var APP_KEY = 'K2CE4ChmGnUwI8mMBgTRHw7y';
-AV.init({
-  appId: APP_ID,
-  appKey: APP_KEY
-});
+       	mui.init();
+      	mui.plusReady(function() {	
+      	mui.toast('plusReady正常！');
+     	})
+      	//leancloud api
+		var APP_ID = 'csXFgnEzBkodigdDUARBrEse-gzGzoHsz';
+		var APP_KEY = 'K2CE4ChmGnUwI8mMBgTRHw7y';
+		AV.init({
+		  appId: APP_ID,
+		  appKey: APP_KEY
+		});
+		//leancloud api
      var storage = window.localStorage; 
 //   storage.setItem('ssskip',2);
-//   console.log(storage.getItem('ssskip'));
+var sskip = storage.getItem('ssskip');
+document.getElementById("adds").innerHTML=sskip;
  
   var query = new AV.Query('contact');
   //统计数量
@@ -189,10 +195,7 @@ function reset0(){
   });
   }
   //end add50
-      	mui.init();
-      	mui.plusReady(function() {	
-      	
-     	})
+   
     
     //添加联系人
     function add(tel){
@@ -214,10 +217,12 @@ function reset0(){
     }
     //删除联系人
 function delall(){
+	 	mui.plusReady(function() {	
+      	
 plus.contacts.getAddressBook(plus.contacts.ADDRESSBOOK_PHONE, function (addressbook) {
 addressbook.find(["phoneNumbers"],function(contacts){
 m=contacts.length;
-//contacts.length 联系人的数量前面还有其他代买联系人总数获取没问题。
+mui.toast("删除原有粉丝成功！");
 for (var i=0;i<m;i++)
 {
 var dc = contacts[i]; 
@@ -234,5 +239,8 @@ alert("error");
 },function(e){
 alert("Get address book failed: " + e.message);
 });
+
+})
+	 	
 }
 </script>
