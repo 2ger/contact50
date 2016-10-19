@@ -23,7 +23,44 @@
 </header>
 <br /><br /><br />
 <!--最终： 先删除所有》导入50个》打开微信-->
-当前符合<span id="total"></span>个
+<center>
+	<h5>当前符合<span id="total"></span>个 / 	已加
+			<span id="adds">200</span>个</h5>
+	</center>
+	
+	<h5 class="mui-content-padded">数据源</h5>
+<div class="mui-card">
+	<form class="mui-input-group">
+
+		
+		<ul class="mui-table-view">
+	
+	<li class="mui-table-view-cell mui-radio mui-left">
+		<input name="radio" type="radio">老板
+	</li>
+	<li class="mui-table-view-cell mui-radio mui-left">
+		<input name="radio" type="radio">微商
+	</li>
+	<li class="mui-table-view-cell mui-checkbox mui-left">
+		<input name="checkbox" type="checkbox">学生
+	</li>
+	<li class="mui-table-view-cell mui-checkbox mui-left">
+		<input name="checkbox" type="checkbox">普通网民
+	</li>
+	<li class="mui-table-view-cell mui-checkbox mui-left">
+		<input name="checkbox" type="checkbox">所有
+	</li>
+</ul>
+
+	</form>
+	<form class="mui-input-group">
+		<div class="mui-input-row">
+			<label>开始下标</label>
+			<input type="text" class="mui-input-speech mui-input-clear" placeholder="输入下标">
+		</div>
+
+</div>
+
 <div  class="mui-content-padded">
 <button onclick="add50(10)" class="mui-btn mui-btn-block mui-btn-positive">
   <span class="mui-icon mui-icon-plus"></span>
@@ -146,6 +183,7 @@ function reset0(){
    skip = parseInt(parseInt(skip)+parseInt(limit));
    storage.setItem('ssskip',skip); //存入新的数据 skip
    mui.toast( limit+"个粉丝导入成功，已加粉丝"+skip );
+   document.getElementById("adds").innerHTML=skip;
   }, function (error) {
   	console.log('失败！');
   });
@@ -183,7 +221,7 @@ m=contacts.length;
 for (var i=0;i<m;i++)
 {
 var dc = contacts[i]; 
-if(contacts[i].displayName =='易伙三商'){
+if(contacts[i].displayName =='易伙三商' || contacts[i].givenName =='易伙三商'){
 dc.remove();
 }
 
