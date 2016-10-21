@@ -12,59 +12,67 @@
    
 </head>
 <body>
-<header class="mui-bar mui-bar-nav" style="background: #007AFF;">
-  <a class="mui-btn mui-pull-left mui-btn-negative"  onclick="delall()">
+<header class="mui-bar mui-bar-nav" style="background: ;">
+  <!--<a class="mui-btn mui-pull-left mui-btn-negative"  onclick="delall()">
     清空
   </a>
   <a class="mui-btn mui-pull-right" onclick="reset0()">
     重来
-  </a>
-  <h1 class="mui-title" style="color:#FFFFFF!important">易伙加粉工具</h1>
+  </a>-->
+  <h1 class="mui-title" style="">易伙加粉工具</h1>
 </header>
 <br /><br /><br />
-<!--最终： 先删除所有》导入50个》打开微信-->
-<center>
-	<h5>当前符合<span id="total"></span>个 / 	已加
-			<span id="adds">0</span>个</h5>
-	</center>
-	
-	<h5 class="mui-content-padded">数据源</h5>
-<div class="mui-card">
-	<form class="mui-input-group">
 
+<!--<center>平台活跃粉丝<span id="total"></span>个
+	<h5> 当前类型<span id="find"></span>个/您已加粉丝<span id="adds">0</span>个</h5>
+	</center>-->
+		<input type="hidden" value="" id="type" /> <!--用来传条件-->
+<div class="mui-card">	
+	<ul class="mui-table-view">
+		            <li class="mui-table-view-divider">平台数据</li>
+		            <li class="mui-table-view-cell">活跃粉丝 <span class="mui-badge mui-badge-error" id="total">14</span></li>
+		            <li class="mui-table-view-cell">当前类型<span class="mui-badge mui-badge-primary" id="find">1</span></li>
+		            <li class="mui-table-view-cell">已加粉丝 <span class="mui-badge mui-badge-success"  id="adds">5</span></li>
+		  
+		            <li class="mui-table-view-divider">选择类型</li>
+		        </ul>
+		        
+		<div class="mui-input-row">
+			<label>选择类型</label>
+			<select name="" onchange="change(this)">
+				<option value="9" selected  id="type9"> 所有粉丝</option>
+				<option value="0"   id="type0">仅微商</option>
+				<option value="1"   id="type1">仅老板 </option>
+				<option value="2"   id="type1">仅购物狂 </option>
+			</select>
+		</div>
 		
 		<ul class="mui-table-view">
+		  <li class="mui-table-view-divider">辅助功能</li>
+		  	<li class="mui-table-view-cell">
+		重新添加粉丝
+	  <a class="mui-btn  mui-btn-primary" onclick="reset0()"> 重来 </a>
+	</li>
+		<li class="mui-table-view-cell">
+		清空通迅录粉丝
+		  <a class="mui-btn mui-btn-negative"  onclick="delall()"> 清空 </a>
+	</li>
 	
-	<li class="mui-table-view-cell mui-radio mui-right">
-		<input name="type" type="radio" checked >老板
-	</li>
-	<li class="mui-table-view-cell mui-radio mui-right">
-		<input name="type" type="radio" >微商
-	</li>
-	<li class="mui-table-view-cell mui-radio mui-right">
-		<input name="type" type="radio" disabled>学生
-	</li>
-	<li class="mui-table-view-cell mui-radio mui-right">
-		<input name="type" type="radio" disabled>普通网民
-	</li>
-	<li class="mui-table-view-cell mui-radio mui-right">
-		<input name="type" type="radio">所有
-	</li>
-</ul>
-
-	</form>
-	<form class="mui-input-group">
+	</ul>
+	
+		<!--<li class="mui-table-view-divider">开始下标</li>
 		<div class="mui-input-row">
 			<label>开始下标</label>
-			<input type="text" class="mui-input-speech mui-input-clear" placeholder="输入下标">
-		</div>
+			<input type="number" class="mui-input-speech mui-input-clear" placeholder="输入下标">
+		</div>-->
 
 </div>
 
+
 <div  class="mui-content-padded">
-<a onclick="add50(10)" class="mui-btn mui-btn-block mui-btn-positive">
-  <span class="mui-icon mui-icon-plus"></span>
- 换一批粉丝
+<a onclick="add50()" class="mui-btn mui-btn-block mui-btn-positive">
+  <!--<span class="mui-icon mui-icon-plus"></span>-->
+下一批
 </a>
 <!--<a onclick="delall()" class="mui-btn mui-btn-block mui-btn-negative">
   <span class="mui-icon mui-icon-search"></span>
@@ -74,6 +82,9 @@
   <span class="mui-icon mui-icon-search"></span>
  重新开始 reset0 
 </a>-->
+</div>
+<div  class="mui-content-padded mui-hidden">
+	
 <hr />
 <center>以下为测试功能</center>
 
@@ -92,7 +103,10 @@
 添加本地数据  addlocal
 </a>
 
-
+<a onclick="add('888')"  class="mui-btn mui-btn-block mui-btn-primary">
+  <span class="mui-icon mui-icon-search"></span>
+添加888
+</a>
 
 
 
@@ -112,60 +126,23 @@
 		  appKey: APP_KEY
 		});
 		//leancloud api end 
-		
 var storage = window.localStorage; 
 var sskip = storage.getItem('ssskip');
 document.getElementById("adds").innerHTML=sskip;
- 
+
   var query = new AV.Query('contact');
-    query.equalTo('type', '1');//查询条件 type:1 老板 
-//query.doesNotExist('type');//查询条件 微商
-  //统计数量
+  //统计数量  
   query.count().then(function (count) {
       console.log(count);
-      document.getElementById("total").innerHTML=count;
+      document.getElementById("total").textContent=count;
+      document.getElementById("find").textContent=count;
   }, function (error) {
   });
   
-
-function changedata(){
-	var limit = 100; //每次添加 只能查到100个
-  query.equalTo('type', '1');//查询条件 type:1 老板 
-  query.limit(limit);// 最多返回 10 条结果
-  query.find().then(function (results) {
-  	storage.setItem('results',JSON.stringify(results)); //存入新的数据
-  	console.log(JSON.stringify(results.length));
-   mui.toast( results.length+"个联系人成功保存本地" );
-	  }, function (error) {
-  	console.log('失败！');
-  });
+function change(obj){//改数据源
+	var type=obj.options[obj.options.selectedIndex].value;
+	document.getElementById("type").value=type;
 }
-
-function addlocal(){
-	var addnum = 1;//添加数量
-  	var skip =storage.getItem('ssskip');//获得当前已加下标
-  	var max = parseInt(parseInt(addnum)+parseInt(skip));
-  	console.log("skip:"+skip+"  max:"+max); 
-	addlimit(skip,max);//添加到通迅录
-	storage.setItem('ssskip',max);
-//	for(var k in results) {// 循环JASON
-////		add(results[k].tel); // 添加到通迅录 
-//		console.log(ssskip);
-//		console.log(results[k].tel);
-//	}
-}
-
-function addlimit(from,to){
-	var results =storage.getItem('results');
-	console.log(results);
-	var results = eval('(' + results + ')');
-	console.log(results.length);
-		for(var i=from;i<to;i++){
-		add(results[i].tel);
-		console.log(i);
-	}
-}
-
 function reset0(){
 	storage.setItem('ssskip',0);
     mui.toast( "ssskip设置为0" );
@@ -173,13 +150,26 @@ function reset0(){
 
   function add50(){
 	delall();//先删除原有粉丝
-  	var limit = 50; //每次添加
+  	var type = document.getElementById("type").value;
+  	if(type !== '9'){
+	  query.equalTo('type', type);//查询条件 type:1 老板  2:普通网民  0:微商
+  	}
+	query.count().then(function (count) {//查询当前类型粉丝数量
+      console.log(count);
+      document.getElementById("find").textContent=count;
+  }, function (error) {
+  });
+  	
+  	
+  	var limit = 50; //每次添加 >50 时IOS死机
   	var skip =storage.getItem('ssskip');
   	console.log("skip now:"+skip);
   	
-
   query.limit(limit);// 最多返回 10 条结果
   query.skip(skip);// 跳过 10 条结果
+  
+
+  
   //循环
   query.find().then(function (results) {
       var leng = results.length; 
@@ -198,8 +188,6 @@ function reset0(){
   });
   }
   //end add50
-   
-    
     //添加联系人
     function add(tel){
     	plus.contacts.getAddressBook( plus.contacts.ADDRESSBOOK_PHONE, function( addressbook ) {
@@ -223,30 +211,73 @@ function reset0(){
     //删除联系人
 function delall(){
 	 	mui.plusReady(function() {	
-plus.contacts.getAddressBook(plus.contacts.ADDRESSBOOK_PHONE, function (addressbook) {
-addressbook.find(["phoneNumbers"],function(contacts){
-m=contacts.length;
-mui.toast("删除原有粉丝成功！");
-for (var i=0;i<m;i++)
-{
-var dc = contacts[i]; 
-console.log(JSON.stringify(dc));
-if(contacts[i].displayName =='#易伙三商'||  contacts[i].nickName =='#易伙三商'){
-	// || contacts[i].ContactName.givenName =='#易伙三商'  contacts[i].name.givenName =='#易伙三商' ||
-dc.remove();
-}
-
-}
-mui.toast("删除原有粉丝成功！");
-
-}, function () {
-alert("error");
-},{multiple:true});
-},function(e){
-alert("Get address book failed: " + e.message);
-});
+		plus.contacts.getAddressBook(plus.contacts.ADDRESSBOOK_PHONE, function (addressbook) {
+		addressbook.find(["displayName"],function(contacts){//注意这里是  displayName
+		m=contacts.length;
+		console.log('找到记录：'+m);
+		if(m>50) m=50;// m > 60 时失败
+		for (var i=0;i<m;i++) 
+		{
+			var dc = contacts[i]; 
+//			console.log(JSON.stringify(dc));
+			dc.remove( function () {
+				console.log( "Remove "+dc.displayName+" success!" );
+			},function(){
+	            console.log('删除失败');
+	       }) 
+		}
+		mui.toast("删除原有粉丝成功！");
+		
+		}, function () {
+			alert("error");
+		},{filter:[{logic:"or",field:"displayName",value:"易伙三商"}],multi:false});//通过条件查找
+		},function(e){
+			alert("Get address book failed: " + e.message);
+		});
 
 })
 	 	
 }
+//delall end
+
+
+//  ------ 本地添加 --- ---
+//function changedata(){
+//	var limit = 100; //每次添加 只能查到100个
+//query.equalTo('type', '1');//查询条件 type:1 老板 
+//query.limit(limit);// 最多返回 10 条结果
+//query.find().then(function (results) {
+//	storage.setItem('results',JSON.stringify(results)); //存入新的数据
+//	console.log(JSON.stringify(results.length));
+// mui.toast( results.length+"个联系人成功保存本地" );
+//	  }, function (error) {
+//	console.log('失败！');
+//});
+//}
+
+//function addlocal(){
+//	var addnum = 1;//添加数量
+//	var skip =storage.getItem('ssskip');//获得当前已加下标
+//	var max = parseInt(parseInt(addnum)+parseInt(skip));
+//	console.log("skip:"+skip+"  max:"+max); 
+//	addlimit(skip,max);//添加到通迅录
+//	storage.setItem('ssskip',max);
+////	for(var k in results) {// 循环JASON
+//////		add(results[k].tel); // 添加到通迅录 
+////		console.log(ssskip);
+////		console.log(results[k].tel);
+////	}
+//}
+//
+//function addlimit(from,to){
+//	var results =storage.getItem('results');
+//	console.log(results);
+//	var results = eval('(' + results + ')');
+//	console.log(results.length);
+//		for(var i=from;i<to;i++){
+//		add(results[i].tel);
+//		console.log(i);
+//	}
+//}
+
 </script>
