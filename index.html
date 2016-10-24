@@ -30,8 +30,8 @@
 <div class="mui-card">	
 	<ul class="mui-table-view">
 		            <li class="mui-table-view-divider">平台数据</li>
-		            <li class="mui-table-view-cell">活跃粉丝 <span class="mui-badge mui-badge-error" id="total">14</span></li>
-		            <li class="mui-table-view-cell">当前类型<span class="mui-badge mui-badge-primary" id="find">1</span></li>
+		            <li class="mui-table-view-cell">活跃粉丝 <span class="mui-badge mui-badge-primary" id="total">14</span></li>
+		            <li class="mui-table-view-cell">当前类型<span class="mui-badge mui-badge-danger" id="find">1</span></li>
 		            <li class="mui-table-view-cell">已加粉丝 <span class="mui-badge mui-badge-success"  id="adds">5</span></li>
 		  
 		            <li class="mui-table-view-divider">选择类型</li>
@@ -150,6 +150,7 @@ function reset0(){
 
   function add50(){
 	delall();//先删除原有粉丝
+// mui.toast( "正在导入粉丝，请稍等！");
   	var type = document.getElementById("type").value;
   	if(type !== '9'){
 	  query.equalTo('type', type);//查询条件 type:1 老板  2:普通网民  0:微商
@@ -160,7 +161,6 @@ function reset0(){
   }, function (error) {
   });
   	
-  	
   	var limit = 50; //每次添加 >50 时IOS死机
   	var skip =storage.getItem('ssskip');
   	console.log("skip now:"+skip);
@@ -168,7 +168,6 @@ function reset0(){
   query.limit(limit);// 最多返回 10 条结果
   query.skip(skip);// 跳过 10 条结果
   
-
   
   //循环
   query.find().then(function (results) {
@@ -230,7 +229,7 @@ function delall(){
 		
 		}, function () {
 			alert("error");
-		},{filter:[{logic:"or",field:"displayName",value:"易伙三商"}],multi:false});//通过条件查找
+		},{filter:[{logic:"or",field:"displayName",value:"#易伙三商"}],multi:false});//通过条件查找
 		},function(e){
 			alert("Get address book failed: " + e.message);
 		});
