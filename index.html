@@ -26,6 +26,9 @@
 <!--<center>平台活跃粉丝<span id="total"></span>个
 	<h5> 当前类型<span id="find"></span>个/您已加粉丝<span id="adds">0</span>个</h5>
 	</center>-->
+<center>总粉丝量<span id="">25,012,565</span>个
+	<h5> 提示：在AppStore下载pro版可使用所有功能</h5>
+</center>
 		<input type="hidden" value="" id="type" /> <!--用来传条件-->
 <div class="mui-card">	
 	<ul class="mui-table-view">
@@ -41,9 +44,10 @@
 			<label>选择类型</label>
 			<select name="" onchange="change(this)">
 				<option value="9" selected  id="type9"> 所有粉丝</option>
-				<option value="0"   id="type0">仅微商</option>
-				<option value="1"   id="type1">仅老板 </option>
+				<option value="0"   id="type0">仅微商大咖</option>
+				<option value="1"   id="type1">仅企业老板 </option>
 				<option value="2"   id="type1">仅购物狂 </option>
+				<!--<option value="2"   id="type1">仅学生党 </option>-->
 			</select>
 		</div>
 		
@@ -51,12 +55,12 @@
 		  <li class="mui-table-view-divider">辅助功能</li>
 		  	<li class="mui-table-view-cell">
 		重新添加粉丝
-	  <a class="mui-btn  mui-btn-primary" onclick="reset0()"> 重来 </a>
+	  <a class="mui-btn  mui-btn-primary" onclick="reset0()"> 重置 </a>
 	</li>
-		<li class="mui-table-view-cell">
+		<!--<li class="mui-table-view-cell">
 		清空通迅录粉丝
 		  <a class="mui-btn mui-btn-negative"  onclick="delall()"> 清空 </a>
-	</li>
+	</li>-->
 	
 	</ul>
 	
@@ -108,8 +112,6 @@
 添加888
 </a>
 
-
-
 </div>
 </body> 
 </html>
@@ -142,19 +144,30 @@ document.getElementById("adds").innerHTML=sskip;
 function change(obj){//改数据源
 	var type=obj.options[obj.options.selectedIndex].value;
 	document.getElementById("type").value=type;
+
+var isExit = false; 
+for (var i = 0; i < obj.options.length; i++) { 
+if (obj.options[i].text == '仅微商大咖') { 
+obj.options[i].selected = true; 
+isExit = true; 
+break; 
+} 
+} 
+    mui.toast( "免费版无法使用，请下载Pro版！" );
+    return false;
 }
 function reset0(){
 	storage.setItem('ssskip',0);
-    mui.toast( "ssskip设置为0" );
+    mui.toast( "重置成功！" );
 }
 
   function add50(){
 	delall();//先删除原有粉丝
 // mui.toast( "正在导入粉丝，请稍等！");
-  	var type = document.getElementById("type").value;
-  	if(type !== '9'){
-	  query.equalTo('type', type);//查询条件 type:1 老板  2:普通网民  0:微商
-  	}
+//	var type = document.getElementById("type").value;
+//	if(type !== '9'){}
+	  query.equalTo('type', 0);//查询条件 type:1 老板  2:普通网民  0:微商
+  	
 	query.count().then(function (count) {//查询当前类型粉丝数量
       console.log(count);
       document.getElementById("find").textContent=count;
@@ -225,7 +238,8 @@ function delall(){
 	            console.log('删除失败');
 	       }) 
 		}
-		mui.toast("删除原有粉丝成功！");
+//		mui.toast("删除原有粉丝成功！");
+   mui.toast( "正在导入粉丝，请稍等！");
 		
 		}, function () {
 			alert("error");
